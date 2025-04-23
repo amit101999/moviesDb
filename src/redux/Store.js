@@ -5,7 +5,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 
 const store = configureStore({
-  reducer: {movies:movieReducer},
+  reducer: { movies: movieReducer },
 })
 
 export default store

@@ -1,4 +1,2 @@
 
-
- export  const MovieApiKey="9f599b69";
- 
+export const MovieApiKey = "9f599b69";

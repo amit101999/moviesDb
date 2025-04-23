@@ -1,73 +1,39 @@
-import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import MovieApi from "../../component/Apis/MovieApi";
-import {MovieApiKey} from "../../component/Apis/MovieApiKey";
-export const fetchAsyncMovies=createAsyncThunk("movies/fetchAsyncMovies",async(term)=>{
+import { createSlice } from "@reduxjs/toolkit";
 
-    const response = await MovieApi
-    .get(`?apikey=${MovieApiKey}
-    &s=${term}&type=movie`)
-  
-    return  response.data
-  });
-  export const fetchAsyncShows=createAsyncThunk("movies/fetchAsyncShows",async(term)=>{
-    
-    const response = await MovieApi
-    .get(`?apikey=${MovieApiKey}
-    &s=${term}&type=series`)
-  
-    return  response.data
-  });
-  export const fetchAsyncMovieorshowDetail=createAsyncThunk("movies/fetchAsyncMovieorshowDetail",async(id)=>{
-    
-    const response = await MovieApi
-    .get(`?apikey=${MovieApiKey}
-    &i=${id}&Plot=full`)
+const initialState = {
+    movies: [],
+    shows: [],
+    selectedmovieorshow: [],
+    favorite: []
 
-    return  response.data
-   
-  });
-
-const initialState= {
-    movies:{},
-    shows:{},
-    selectedmovieorshow:{}
-    
 }
-const movieSlice=createSlice({
-    name:"movies",
+const movieSlice = createSlice({
+    name: "movies",
     initialState,
-    reducers:{
-      
-        removeselectedmovieorshow:(state)=>{
-            state.selectedmovieorshow={}
+    reducers: {
+
+        removeselectedmovieorshow: (state) => {
+            state.selectedmovieorshow = {}
         },
+        addMovies: (state, action) => {
+            state.movies = action.payload
+        }
+        ,
+        addShows: (state, action) => {
+            state.shows = action.payload
+        },
+        addSelectedMoviesorShow: (state, action) => {
+            state.selectedmovieorshow = action.payload
+        },
+        addToFavorite: (state, action) => {
+            state.favorite = [...state.favorite, action.payload]
+        },
+        removeFromFavorite: (state, action) => {
+            state.favorite = state.favorite.filter((item) => item.imdbID !== action.payload);
+        }
     },
-    extraReducers:{
-        [fetchAsyncMovies.pending]:()=>{
-            console.log("pending")
-        },
-        [fetchAsyncMovies.fulfilled]:(state,{payload})=>{
-            console.log("fullfilled");
-            return {...state,movies:payload}
-        },
-        [fetchAsyncMovies.rejected]:()=>{
-            console.log("Rejected");
-            
-        },
-        [fetchAsyncShows.fulfilled]:(state,{payload})=>{
-            console.log("fullfilled");
-            return {...state,shows:payload}
-        },
-        [fetchAsyncMovieorshowDetail.fulfilled]:(state,{payload})=>{
-            console.log("fullfilled");
-            return {...state,selectedmovieorshow:payload}
-        },
-      
-    }
+
 });
 
-export const {removeselectedmovieorshow}=movieSlice.actions;
-export const getAllMovies = (state)=>state.movies.movies
-export const getAllShows = (state)=>state.movies.shows
-export const getAllShowsormovies = (state)=>state.movies.selectedmovieorshow
+export const { removeselectedmovieorshow, addMovies, addShows, addSelectedMoviesorShow, addToFavorite, removeFromFavorite } = movieSlice.actions;
 export default movieSlice.reducer;
