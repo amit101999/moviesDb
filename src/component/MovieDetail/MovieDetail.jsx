@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { useParams } from "react-router"
 import { useDispatch, useSelector } from 'react-redux';
-import { removeselectedmovieorshow, addSelectedMoviesorShow, addToFavorite } from '../../redux/movies/movieSlice';
+import { removeselectedmovieorshow, addSelectedMoviesorShow, } from '../../redux/movies/movieSlice';
 import axios from 'axios';
 import { baseURL } from '../Apis/MovieApi';
 import { MovieApiKey } from '../Apis/MovieApiKey';
+import { addToFavorite } from '../../redux/users/userSlice';
 
 
 const MovieDetail = () => {
     const dispatch = useDispatch();
     const { imdbID } = useParams();
-    const { show } = useSelector(state => state.movies.selectedmovieorshow)
 
     const data = useSelector((state) => state.movies.selectedmovieorshow)
 

@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 const MovieCard = (props) => {
   const { data } = props
-  console.log("detail", data)
   return (
     <div >
 
