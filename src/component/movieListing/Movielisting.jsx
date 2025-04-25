@@ -1,10 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import MovieCard from "../MovieCard/MovieCard"
-import axios from 'axios';
-import { baseURL } from '../Apis/MovieApi';
-import { MovieApiKey } from '../Apis/MovieApiKey';
-import { addMovies } from '../../redux/movies/movieSlice';
 
 const Movielisting = () => {
 
@@ -12,19 +8,6 @@ const Movielisting = () => {
   const shows = useSelector((state) => state.movies.shows);
 
 
-
-  let renderMovies, renderShows = "";
-  // renderMovies = movies.Response === "True" ? (
-  //   movies.Search.map((movie, index) => (
-  //     <MovieCard key={index} data={movie} />
-
-  //     ))) : (<div className='movies-error'><h3>{movies.error}</h3></div>);
-  // console.log("rendermovies", renderMovies);
-  // renderShows = shows.Response === "True" ? (
-  //   shows.Search.map((shows, index) => (
-  //     <MovieCard key={index} data={shows} />
-  //   ))) : (<div className='shows-error'><h3>{shows.error}</h3></div>);
-  // console.log("render showsrender", renderShows);
 
 
   return (

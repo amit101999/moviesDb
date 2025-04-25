@@ -1,31 +1,44 @@
 import React, { useEffect } from 'react';
 import { useParams } from "react-router"
 import { useDispatch, useSelector } from 'react-redux';
-import { removeselectedmovieorshow, addSelectedMoviesorShow, } from '../../redux/movies/movieSlice';
+import { addSelectedMoviesorShow, removeselectedmovieorshow, } from '../../redux/movies/movieSlice';
+import { addToFavorite, addToCart } from '../../redux/users/userSlice';
+// import { fetchMovieOrShowById } from '../Apis/fetchMovies';
+
 import axios from 'axios';
-import { baseURL } from '../Apis/MovieApi';
+import { baseURL } from '../Apis/MovieApi'
 import { MovieApiKey } from '../Apis/MovieApiKey';
-import { addToFavorite } from '../../redux/users/userSlice';
 
 
 const MovieDetail = () => {
+
+
     const dispatch = useDispatch();
     const { imdbID } = useParams();
 
     const data = useSelector((state) => state.movies.selectedmovieorshow)
+    const cartData = useSelector((state) => state.users.cart)
+    console.log(cartData[0]?.movieId)
 
-    const handleFavorite = () => {
-        dispatch(addToFavorite(data))
+    const handleCart = () => {
+        const movieData = {
+            Title: data.Title,
+            price: 5,
+            movieId: imdbID,
+            poster: data.Poster
+        }
+
+        dispatch(addToCart(movieData))
     }
 
     useEffect(() => {
-
-        const fetch = async () => {
+        console.log('sa')
+        const fetchMovieOrShowById = async (imdbID) => {
             const response = await axios.get(`${baseURL}?apikey=${MovieApiKey}&i=${imdbID}&Plot=full`)
             dispatch(addSelectedMoviesorShow(response.data))
         }
 
-        fetch()
+        fetchMovieOrShowById(imdbID);
         return () =>
             dispatch(removeselectedmovieorshow())
     }, [dispatch, imdbID]);
@@ -50,12 +63,14 @@ const MovieDetail = () => {
                                     <span className='flex flex-row gap-2 items-center' >RunTime <i class="fa-solid fa-film"></i>:{data.Runtime}</span>
                                     <span className='flex flex-row gap-2 items-center'>Year <i class="fa-solid fa-calendar"></i>:{data.Year}</span>
                                 </div>
-                                <div className='favorite items-center'>
-                                    <button
-                                        className='bg-sky-500  hover:bg-sky-400 items-center border-none 
-                                     rounded-md text-md text-white px-4'
-                                        onClick={handleFavorite}>Add to favorite
-                                        <i class="ri-heart-3-fill text-3xl "></i></button>
+                                <div className='favorite '>
+                                    {cartData.includes(imdbID) ? (<div>Watch Now</div>) : (
+                                        <button
+                                            className='bg-sky-500 items-center hover:bg-sky-400 items-center border-none 
+                                     rounded-md text-md text-white px-4 py-2'
+                                            onClick={handleCart}>Buy Now :
+                                            <span className="text-xl ml-2">$5</span>
+                                        </button>)}
                                 </div>
                             </div>
                             <div className=' text-white text-start mt-8 text-2xl' >Cast :</div>

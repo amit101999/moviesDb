@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import MovieListing from "../movieListing/Movielisting";
 import { useDispatch } from 'react-redux';
-import { addMovies, addShows, fetchAsyncMovies, fetchAsyncShows } from '../../redux/movies/movieSlice';
+import { addMovies, addShows, } from '../../redux/movies/movieSlice';
 import axios from 'axios';
 import { baseURL } from '../Apis/MovieApi';
 import { MovieApiKey } from '../Apis/MovieApiKey';
