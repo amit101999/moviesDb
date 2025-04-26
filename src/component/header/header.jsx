@@ -13,9 +13,9 @@ const Header = () => {
   const [modal, setModal] = useState(false)
   const { user } = useSelector(state => state.users)
 
-  useEffect(() => {
-    console.log("user is : ", user)
-  }, [user, input])
+  // useEffect(() => {
+
+  // }, [user, input])
 
   const submitHandler = async (e) => {
     e.preventDefault();

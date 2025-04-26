@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router"
 import { useDispatch, useSelector } from 'react-redux';
 import { addSelectedMoviesorShow, removeselectedmovieorshow, } from '../../redux/movies/movieSlice';
-import { addToFavorite, addToCart } from '../../redux/users/userSlice';
-// import { fetchMovieOrShowById } from '../Apis/fetchMovies';
+import { addShowsCart, addToCart } from '../../redux/users/userSlice';
 
 import axios from 'axios';
 import { baseURL } from '../Apis/MovieApi'
@@ -12,27 +11,55 @@ import { MovieApiKey } from '../Apis/MovieApiKey';
 
 const MovieDetail = () => {
 
+    const [addCard, setAddCard] = useState(false)
 
     const dispatch = useDispatch();
     const { imdbID } = useParams();
 
     const data = useSelector((state) => state.movies.selectedmovieorshow)
-    const cartData = useSelector((state) => state.users.cart)
-    console.log(cartData[0]?.movieId)
+    const cartData = useSelector((state) => state.users.movieCart)
+    const showsData = useSelector((state) => state.users.showsCart)
+
+
 
     const handleCart = () => {
-        const movieData = {
+
+        const Data = {
             Title: data.Title,
             price: 5,
             movieId: imdbID,
             poster: data.Poster
         }
 
-        dispatch(addToCart(movieData))
+        if (data.Type === 'movie') {
+            dispatch(addToCart(Data))
+        } else {
+            dispatch(addShowsCart(Data))
+        }
+        alert('Conguraltions')
     }
 
     useEffect(() => {
-        console.log('sa')
+        const isMovie = cartData?.find((item) => {
+            return item.movieId === imdbID
+
+        })
+        const isShow = showsData?.find((item) => {
+            return item.movieId === imdbID
+
+        })
+
+
+        if (isMovie || isShow) setAddCard(true)
+        else setAddCard(false)
+
+        return () => {
+            setAddCard(false)
+        }
+
+    }, [cartData, showsData])
+
+    useEffect(() => {
         const fetchMovieOrShowById = async (imdbID) => {
             const response = await axios.get(`${baseURL}?apikey=${MovieApiKey}&i=${imdbID}&Plot=full`)
             dispatch(addSelectedMoviesorShow(response.data))
@@ -64,7 +91,9 @@ const MovieDetail = () => {
                                     <span className='flex flex-row gap-2 items-center'>Year <i class="fa-solid fa-calendar"></i>:{data.Year}</span>
                                 </div>
                                 <div className='favorite '>
-                                    {cartData.includes(imdbID) ? (<div>Watch Now</div>) : (
+                                    {addCard ? (<div
+                                        className='bg-red-800 items-center hover:bg-red-500 items-center border-none 
+                                    rounded-md text-md text-white px-4 py-2 hover:cursor-pointer'>Watch Now</div>) : (
                                         <button
                                             className='bg-sky-500 items-center hover:bg-sky-400 items-center border-none 
                                      rounded-md text-md text-white px-4 py-2'

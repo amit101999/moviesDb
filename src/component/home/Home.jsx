@@ -19,7 +19,7 @@ const Home = () => {
       &s=${movieText}&type=movie`)
       dispatch(addMovies(movieData.data.Search))
 
-      // console.log(movieData.data.Search)
+
 
       // add in shows state
       const showsData = await axios.get(`${baseURL}?apikey=${MovieApiKey}

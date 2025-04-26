@@ -4,7 +4,8 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
     user: {},
     favorite: [],
-    cart: []
+    movieCart: [],
+    showsCart: []
 }
 
 const userSlice = createSlice({
@@ -26,22 +27,33 @@ const userSlice = createSlice({
         },
         addToCart: (state, action) => {
             const { movieId } = action.payload
-            const exists = state.cart.filter((item) => item.movieId === movieId)
-            // if movie is not in the cart then only add
+            const exists = state.movieCart.filter((item) => item.movieId === movieId)
+            // if movie is not in the movieCart then only add
             if (exists.length == 0) {
-                state.cart = [...state.cart, action.payload]
+                state.movieCart = [...state.movieCart, action.payload]
             }
         },
         removeFromCart: (state, action) => {
-            state.cart = state.cart.filter((item) => item.movieId !== action.payload)
+            state.movieCart = state.movieCart.filter((item) => item.movieId !== action.payload)
         }
         ,
-        clearCart: (state, action) => {
-            state.cart = []
+        addShowsCart: (state, action) => {
+            const { movieId } = action.payload
+            const exists = state.showsCart.filter((item) => item.movieId === movieId)
+            // if movie is not in the movieCart then only add
+            if (exists.length == 0) {
+                state.showsCart = [...state.showsCart, action.payload]
+            }
+        },
+        removeShowsFromCart: (state, action) => {
+            state.showsCart = state.showsCart.filter((item) => item.movieId !== action.payload)
         }
+
 
     }
 })
 
-export const { addUser, deleteUser, addToFavorite, removeFromFavorite, addToCart, removeFromCart, clearCart } = userSlice.actions
+export const { addUser, deleteUser, addToFavorite, removeFromFavorite,
+    addToCart, removeFromCart, clearCart,
+    addShowsCart, removeShowsFromCart } = userSlice.actions
 export default userSlice.reducer
