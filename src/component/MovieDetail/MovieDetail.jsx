@@ -19,10 +19,15 @@ const MovieDetail = () => {
     const data = useSelector((state) => state.movies.selectedmovieorshow)
     const cartData = useSelector((state) => state.users.movieCart)
     const showsData = useSelector((state) => state.users.showsCart)
+    const { user } = useSelector(state => state.users)
 
 
 
     const handleCart = () => {
+
+        const getKey = axios.get("localhost")
+
+        payentHandler()
 
         const Data = {
             Title: data.Title,
