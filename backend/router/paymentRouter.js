@@ -18,7 +18,7 @@ router.get("/getkey", (req, res) => {
 })
 router.post("/checkout", async (req, res) => {
     const options = {
-        amount: 50000,
+        amount: Number(req.body.amount * 100),
         currency: "INR"
     }
 
@@ -29,8 +29,36 @@ router.post("/checkout", async (req, res) => {
     })
 })
 
-router.post("/verify-payment", (req, res) => {
-    res.send('world')
+router.post("/paymentVerification", async (req, res) => {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+        req.body;
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_APT_SECRET)
+        .update(body.toString())
+        .digest("hex");
+
+    const isAuthentic = expectedSignature === razorpay_signature;
+
+    if (isAuthentic) {
+        // Database comes here
+
+        await Payment.create({
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature,
+        });
+
+        res.redirect(
+            `http://localhost:3500/paymentsuccess?reference=${razorpay_payment_id}`
+        );
+    } else {
+        res.status(400).json({
+            success: false,
+        });
+    }
 })
 
 export default router;

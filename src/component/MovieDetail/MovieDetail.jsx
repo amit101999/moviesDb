@@ -3,10 +3,10 @@ import { useParams } from "react-router"
 import { useDispatch, useSelector } from 'react-redux';
 import { addSelectedMoviesorShow, removeselectedmovieorshow, } from '../../redux/movies/movieSlice';
 import { addShowsCart, addToCart } from '../../redux/users/userSlice';
-
 import axios from 'axios';
 import { baseURL } from '../Apis/MovieApi'
 import { MovieApiKey } from '../Apis/MovieApiKey';
+// import { Razorpay } from 'razorpay'
 
 
 const MovieDetail = () => {
@@ -21,13 +21,43 @@ const MovieDetail = () => {
     const showsData = useSelector((state) => state.users.showsCart)
     const { user } = useSelector(state => state.users)
 
+    const checkout = async () => {
+        const paymentKey = await axios.get("http://www.localhost:3500/getkey")
 
+        const paymentOrder = await axios.post("http://localhost:3500/checkout", {
+            amount: 400
+        })
 
-    const handleCart = () => {
+        const options = {
+            key: paymentKey.data.key,
+            amount: paymentOrder.data.order.amount,
+            currency: "INR",
+            name: "MOVIE DB",
+            description: data.Title,
+            image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+            order_id: paymentOrder.data.order.id,
+            callback_url: "http://localhost:3500/paymentverification",
+            prefill: {
+                name: user.name,
+                email: user.email,
+                contact: "9999999999"
+            },
+            notes: {
+                "address": "Razorpay Corporate Office"
+            },
+            theme: {
+                "color": "#121212"
+            }
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
 
-        const getKey = axios.get("localhost")
+    }
 
-        payentHandler()
+    const handleCart = async () => {
+
+        // will process the payment interface
+        await checkout()
 
         const Data = {
             Title: data.Title,
