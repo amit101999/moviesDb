@@ -1,15 +1,44 @@
+/* Modern Movie Listing Styles */
+.movie-list {
+    margin: 20px 0px;
+    position: relative;
+}
 
-.movie-list{
-    margin: 20px 0px;}
-    .movie-list h2{
-        color:#79b8f3;
-        margin-bottom: 10px;
-        font-weight: 400;
+.movie-list h2 {
+    color: #79b8f3;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.movie-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-gap: 15px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Animation for smooth loading */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-.movie-conatiner{
- display: grid;
- grid-template-columns: repeat(auto-fill,minmax(220px,1fr));   
- 
- grid-gap: 15px;
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .movie-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-gap: 12px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .movie-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
 }

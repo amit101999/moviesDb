@@ -108,53 +108,191 @@ const MovieDetail = () => {
 
 
     return (
-        <div className='' >
-            hello
-            {Object.keys(data).length === 0 ? (<div><h3>...Loading</h3></div>) :
-                (<>
-                    <div className='flex flex-row my-6 w-full' >
-                        <div className='w-[25%]'>
-                            <img src={data.Poster} alt={data.Title} className='rounded-lg mt-20 h-100 w-full' />
-                        </div>
-                        <div className='ml-8 w-[70%]'>
-                            <div className='text-white text-6xl'>{data.Title}</div>
-                            <div className='flex flex-row justify-between mt-12'>
-                                <div className='flex flex-col gap-3 text-start mt-4 text-md text-white'>
-                                    <span className='flex flex-row gap-2 items-center'>IMDB Rating : <i class="fa-solid fa-star"></i>{data.imdbRating}</span>
-                                    <span className='flex flex-row gap-2 items-center'>IMDB Votes <i class="fa-solid fa-thumbs-up"></i>:{data.imdbVotes} </span>
-                                    <span className='flex flex-row gap-2 items-center' >RunTime <i class="fa-solid fa-film"></i>:{data.Runtime}</span>
-                                    <span className='flex flex-row gap-2 items-center'>Year <i class="fa-solid fa-calendar"></i>:{data.Year}</span>
-                                </div>
-                                <div className='favorite '>
-                                    {addCard ? (<div
-                                        className='bg-red-800 items-center hover:bg-red-500 items-center border-none 
-                                    rounded-md text-md text-white px-4 py-2 hover:cursor-pointer'>Watch Now</div>) : (
-                                        <button
-                                            className='bg-sky-500 items-center hover:bg-sky-400 items-center border-none 
-                                     rounded-md text-md text-white px-4 py-2'
-                                            onClick={handleCart}>Buy Now :
-                                            <span className="text-xl ml-2">$5</span>
-                                        </button>)}
-                                </div>
-                            </div>
-                            <div className=' text-white text-start mt-8 text-2xl' >Cast :</div>
-                            <div className='flex flex-col gap-2 text-start mt-2'>
-                                <p className='text-white' >Director : {data.Director}</p>
-                                <p className='text-white' >Star : {data.Actors}</p>
-                                <p className='text-white' >Genres : {data.Genre}</p>
-                                <p className='text-white' >Languages : {data.Language}</p>
-                                <p className='text-white' >Award : {data.Awards}</p>
-                            </div>
-                        </div>
+        <div className='min-h-screen py-8'>
+            {Object.keys(data).length === 0 ? (
+                <div className='flex items-center justify-center min-h-[60vh]'>
+                    <div className='text-center'>
+                        <div className='inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4'></div>
+                        <h3 className='text-white text-2xl font-semibold'>Loading...</h3>
                     </div>
+                </div>
+            ) : (
+                <>
+                    {/* Main Content Section */}
+                    <div className='flex flex-col lg:flex-row gap-8 lg:gap-12 my-8'>
+                        {/* Poster Section */}
+                        <div className='w-full lg:w-[30%] flex-shrink-0'>
+                            <div className='sticky top-8'>
+                                <div className='relative group'>
+                                    <div className='absolute -inset-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300'></div>
+                                    <img 
+                                        src={data.Poster !== 'N/A' ? data.Poster : 'https://via.placeholder.com/400x600?text=No+Poster'} 
+                                        alt={data.Title} 
+                                        className='relative rounded-2xl w-full shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-300'
+                                        onError={(e) => {
+                                            e.target.src = 'https://via.placeholder.com/400x600?text=No+Poster'
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
-                    <div className='my-12'>
-                        <p className='bg-slate-800 text-white text-2xl py-1 my-4'>Storyline</p>
-                        <div className='text-lg text-zinc-300 text-justify'>{data.Plot}</div>
+                        {/* Details Section */}
+                        <div className='flex-1 space-y-8'>
+                            {/* Title and Action Button */}
+                            <div className='space-y-6'>
+                                <div>
+                                    <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 mb-4'>
+                                        {data.Title}
+                                    </h1>
+                                    <div className='flex flex-wrap items-center gap-4 text-gray-300'>
+                                        <span className='flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-sm'>
+                                            <i className="ri-calendar-line text-blue-400"></i>
+                                            {data.Year}
+                                        </span>
+                                        <span className='flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-sm'>
+                                            <i className="ri-film-line text-purple-400"></i>
+                                            {data.Runtime}
+                                        </span>
+                                        <span className='flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-sm'>
+                                            <i className="ri-movie-2-line text-pink-400"></i>
+                                            {data.Type === 'movie' ? 'Movie' : 'Series'}
+                                        </span>
+                                        {data.Rated && (
+                                            <span className='px-3 py-1 bg-yellow-600/20 border border-yellow-500 rounded-full text-yellow-400 text-sm font-semibold'>
+                                                {data.Rated}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Action Button */}
+                                <div className='flex justify-start'>
+                                    {addCard ? (
+                                        <button className='group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200'>
+                                            <i className="ri-play-circle-fill text-2xl"></i>
+                                            <span>Watch Now</span>
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleCart}
+                                            className='group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200'
+                                        >
+                                            <i className="ri-shopping-cart-2-fill text-2xl"></i>
+                                            <span>Buy Now</span>
+                                            <span className="ml-2 px-3 py-1 bg-white/20 rounded-lg text-xl font-bold">
+                                                $5
+                                            </span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Ratings and Stats */}
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                                <div className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg'>
+                                    <div className='flex items-center gap-3 mb-2'>
+                                        <div className='p-3 bg-yellow-500/20 rounded-lg'>
+                                            <i className="ri-star-fill text-yellow-400 text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <p className='text-gray-400 text-sm'>IMDB Rating</p>
+                                            <p className='text-white text-2xl font-bold'>{data.imdbRating || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <p className='text-gray-500 text-sm mt-2'>{data.imdbVotes || 'N/A'} votes</p>
+                                </div>
+
+                                <div className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg'>
+                                    <div className='flex items-center gap-3 mb-2'>
+                                        <div className='p-3 bg-blue-500/20 rounded-lg'>
+                                            <i className="ri-thumb-up-fill text-blue-400 text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <p className='text-gray-400 text-sm'>IMDB Votes</p>
+                                            <p className='text-white text-2xl font-bold'>{data.imdbVotes || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Movie Information */}
+                            <div className='space-y-6'>
+                                <h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400'>
+                                    Movie Information
+                                </h2>
+                                
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                                    <div className='bg-gray-800/50 rounded-lg p-4 border border-gray-700'>
+                                        <div className='flex items-start gap-3'>
+                                            <i className="ri-movie-2-line text-blue-400 text-xl mt-1"></i>
+                                            <div>
+                                                <p className='text-gray-400 text-sm mb-1'>Director</p>
+                                                <p className='text-white font-medium'>{data.Director || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='bg-gray-800/50 rounded-lg p-4 border border-gray-700'>
+                                        <div className='flex items-start gap-3'>
+                                            <i className="ri-star-line text-yellow-400 text-xl mt-1"></i>
+                                            <div>
+                                                <p className='text-gray-400 text-sm mb-1'>Actors</p>
+                                                <p className='text-white font-medium line-clamp-2'>{data.Actors || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='bg-gray-800/50 rounded-lg p-4 border border-gray-700'>
+                                        <div className='flex items-start gap-3'>
+                                            <i className="ri-price-tag-3-line text-purple-400 text-xl mt-1"></i>
+                                            <div>
+                                                <p className='text-gray-400 text-sm mb-1'>Genres</p>
+                                                <p className='text-white font-medium'>{data.Genre || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='bg-gray-800/50 rounded-lg p-4 border border-gray-700'>
+                                        <div className='flex items-start gap-3'>
+                                            <i className="ri-global-line text-green-400 text-xl mt-1"></i>
+                                            <div>
+                                                <p className='text-gray-400 text-sm mb-1'>Languages</p>
+                                                <p className='text-white font-medium'>{data.Language || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {data.Awards && data.Awards !== 'N/A' && (
+                                        <div className='bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-lg p-4 border border-yellow-500/30 md:col-span-2'>
+                                            <div className='flex items-start gap-3'>
+                                                <i className="ri-award-line text-yellow-400 text-xl mt-1"></i>
+                                                <div>
+                                                    <p className='text-gray-400 text-sm mb-1'>Awards</p>
+                                                    <p className='text-white font-medium'>{data.Awards}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Storyline Section */}
+                            <div className='space-y-4 pt-4'>
+                                <h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400'>
+                                    Storyline
+                                </h2>
+                                <div className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 md:p-8 border border-gray-700 shadow-lg'>
+                                    <p className='text-gray-300 text-lg leading-relaxed text-justify'>
+                                        {data.Plot || 'No plot available.'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </>)
-            }
-        </div >
+                </>
+            )}
+        </div>
     );
 };
 
